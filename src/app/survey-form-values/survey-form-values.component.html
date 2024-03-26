@@ -1,0 +1,110 @@
+<!-- <p>survey-forms works!</p> -->
+
+<div>
+  <!-- Use contenteditable attribute to make the <h2> element editable -->
+  <h2 contenteditable="true" (input)="onTitleChange($event)">{{ survey_forms.title }}</h2>
+</div>
+
+<div *ngFor="let question of questions" style="background-color: white; margin-bottom: 10pt; padding: 10pt 10pt;">
+
+  <div class="row" style="display: flex; ">
+
+      <div>
+          <h3>{{ question.Q_n }}</h3>
+      </div>
+  
+      <div style="padding: 2pt 2pt;">
+          <h3 contenteditable="true" (input)="onQuestionTextChange($event, question)">{{ question.Q_text }}</h3>
+      </div>
+
+  </div>
+  
+  <!-- Use mat-select to display dropdown options -->
+  <div style="display: flex; flex-direction: row-reverse;">
+      <mat-form-field appearance="outline">
+          <mat-label>Add Choice</mat-label>
+          <mat-select [(ngModel)]="question.selectedChoiceType">
+              <mat-option *ngFor="let item of choice_type | keyvalue" [value]="item.key">
+                  {{ item.value }}
+              </mat-option>
+          </mat-select>
+      </mat-form-field>
+  </div>
+
+  <div *ngIf="question.selectedChoiceType === 'shortanswer'" style="">
+      <mat-form-field appearance="outline" class="w-100" color="primary">
+          <input matInput type="text" [(ngModel)]="question.shortAnswerText" [disabled]="true"/>    
+      </mat-form-field>
+  </div>
+
+  <!-- <div *ngIf="question.selectedChoiceType === 'radio'">
+      <div *ngIf="question.Q_choices && question.Q_choices.length > 0; else defaultChoices">
+          <div *ngFor="let choice of question.Q_choices; let i=index">
+              <label>
+                  <input type="radio" name="radioChoices{{question.Q_n}}" [(ngModel)]="choice.ch_text">
+                  <span contenteditable="true" (input)="onChoiceTextChange($event, question, i)">{{ choice.ch_text }}</span>
+              </label>
+          </div>
+      </div>
+      <ng-template #defaultChoices>
+          <div style="display: block">
+              <div>
+                  <label>
+                      <input type="radio" name="radioChoices{{question.Q_n}}">
+                      <span contenteditable="true">Default Choice 1</span>
+                  </label>
+              </div>
+  
+              <div>
+                  <label>
+                      <input type="radio" name="radioChoices{{question.Q_n}}">
+                      <span contenteditable="true">Default Choice 2</span>
+                  </label>
+                  <button *ngIf="question.selectedChoiceType !== 'shortanswer' && question.selectedChoiceType !== 'paragraph'" mat-button color="primary" (click)="addChoice(question)">Add Option</button>
+              </div>
+          </div>
+      </ng-template>
+      <button *ngIf="question.Q_choices && question.Q_choices.length > 0" (click)="addChoice(question)" mat-button color="primary">Add Choice</button>
+  </div> -->
+
+  <!-- <div *ngIf="question.selectedChoiceType === 'radio'">
+      <div>
+          <button *ngIf="question.Q_choices && question.Q_choices.length > 0" (click)="addChoice(question)" mat-button color="primary">Add Choice</button>
+      </div>
+      
+      <div *ngFor="let choice of question.Q_choices; let i=index">
+          <label>
+              <input type="radio" name="radioChoices{{question.Q_n}}" [(ngModel)]="choice.ch_text" >
+              <span contenteditable="true" (input)="onChoiceTextChange($event, question, i)">{{ choice.ch_text }}</span>
+          </label>
+      </div>
+  </div> -->
+
+  <div *ngIf="question.selectedChoiceType === 'radio'">
+      <div>
+          <label>
+              <input type="radio" name="radioChoices{{question.Q_n}}" [(ngModel)]="question.Q_choices[0].ch_text">
+              <span contenteditable="true" (input)="onChoiceTextChange($event, question, 0)">{{ question.Q_choices[0].ch_text }}</span>
+          </label>
+      </div>
+      <div *ngFor="let choice of question.Q_choices.slice(1); let i=index">
+          <label>
+              <input type="radio" name="radioChoices{{question.Q_n}}" [(ngModel)]="choice.ch_text">
+              <span contenteditable="true" (input)="onChoiceTextChange($event, question, i + 1)">{{ choice.ch_text }}</span>
+          </label>
+      </div>
+      <div>
+          <button *ngIf="question.Q_choices && question.Q_choices.length > 0" (click)="addChoice(question)" mat-button color="primary">Add Choice</button>
+      </div>
+  </div>
+
+</div>
+
+
+
+
+
+<div>
+  <!-- <h2>Add Questions</h2> -->
+  <button (click)="addQuestion()">Add Question</button>
+</div>
